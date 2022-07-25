@@ -11,3 +11,25 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.networkModal .modal-content {
+  background-color: #494a49;
+}
+.networkModal .modal-content .modal-header {
+  border-bottom: 0;
+}
+.networkModal .modal-content .modal-title.h4, .networkModal .modal-content p {
+  color: #fff;
+}
+.networkModal .btn-close {
+  filter: invert(75%);
+}
+
+.networkModal .ButtonLightGreenStyle.networkBtn {
+  display: flex;
+  align-items: center;
+  margin: 0 !important;
+  padding: 12px 18px !important;
+  justify-content: center;
+  min-width: 100%;
+}

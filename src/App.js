@@ -4,11 +4,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState } from 'react';
 import { Button, Card } from 'react-bootstrap';
 import SelectWalletModal from './Modal';
-import { useWeb3React } from "@web3-react/core";
-import { networkParams } from "./networks";
-import { connectors } from "./connectors";
-import { toHex, truncateAddress } from "./utils";
-
+import { metaMask } from './walletServices/metamask';
+import 'react-toastify/dist/ReactToastify.css';
+import Toasty from './utils/toasty';
+import { binance } from './walletServices/binance';
+import { walletConnect } from './walletServices/walletConnect';
 
 function App() {
   const [show, setShow] = useState(false)
@@ -17,12 +17,11 @@ function App() {
   const [web3Account, setWeb3Account] = useState();
   const [web3Wallet, setWeb3Wallet] = useState();
 
-
   const closeModal = () => setShow(false)
 
   const handleNetwork = (e) => {
     const id = e.target.value;
-    // setNetwork(Number(id));
+    switchNetwork(id)
   };
 
   const refreshState = () => {
@@ -33,9 +32,49 @@ function App() {
     // setVerified(undefined);
   };
 
+  useEffect(() => {
+    if (web3Wallet) {
+      Toasty(`You are connected to ${web3Wallet}`)
+    }
+  }, [web3Wallet]);
+
   const disconnect = () => {
     refreshState();
   };
+
+  const enableWallet = async () => {
+
+    if (!web3Library) return Toasty("No Wallet Connected");
+    switch (web3Wallet) {
+      case 'MetaMask':
+        await metaMask.onEnableEthereum(web3Library, web3Account)
+        break;
+      case 'Binance':
+        await binance.onEnableBinance(web3Library, web3Account)
+        break;
+      case 'WalletConnect':
+        await walletConnect.onEnableWalletConnect(web3Library, web3Account)
+        break;
+      default:
+      // code block
+    }
+  }
+
+  const switchNetwork = async (chain) => {
+    if (!web3Library) return Toasty("No Wallet Connected");
+    switch (web3Wallet) {
+      case 'MetaMask':
+        await metaMask.onChangeNetwork(chain)
+        break;
+      case 'Binance':
+        await binance.onChangeNetwork(chain)
+        // code block
+        break;
+      default:
+        Toasty("Feature Not Supported")
+      // code block
+    }
+  }
 
 
   return (
@@ -46,6 +85,7 @@ function App() {
         setWeb3Wallet={setWeb3Wallet}
         setWeb3Library={setWeb3Library}
         isOpen={show}
+        disconnect={disconnect}
         closeModal={closeModal}
       />
 
@@ -54,25 +94,23 @@ function App() {
       ) : (
         <Button onClick={disconnect}>Disconnect</Button>
       )}
+
+      <select placeholder="Select network" className='ms-1' value={web3ChainId} onChange={handleNetwork}>
+        <option value="1">Ethereum</option>
+        <option value="137">Polygon</option>
+        <option value="56">BSC</option>
+      </select>
+
       <Card className='mt-4'>
         <Card.Body>
           <h5>Account: {web3Account}</h5>
           <h5>Wallet: {web3Wallet}</h5>
           <h5>ChainId: {web3ChainId}</h5>
+          <Button variant='success' onClick={enableWallet}>
+            Send Transaction
+          </Button>
         </Card.Body>
       </Card>
-      {/* <h3>{`Account: ${truncateAddress(account)}`}</h3>
-      <h3>{`Network ID: ${chainId ? chainId : "No Network"}`}</h3>
-      <Button onClick={switchNetwork} isDisabled={!network}>
-        Switch Network
-      </Button> */}
-      {/* <select placeholder="Select network" onChange={handleNetwork}>
-        <option value="3">Ropsten</option>
-        <option value="4">Rinkeby</option>
-        <option value="42">Kovan</option>
-        <option value="1666600000">Harmony</option>
-        <option value="42220">Celo</option>
-      </select> */}
     </div>
   );
 }
