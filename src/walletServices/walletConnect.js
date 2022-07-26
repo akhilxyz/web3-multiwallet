@@ -1,19 +1,20 @@
 import Web3 from "web3";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-
-export const walletConnectProvider = new WalletConnectProvider({
-    rpc: {
-        1: "https://eth-mainnet.gateway.pokt.network/v1/5f3453978e354ab992c4da79",
-        137: "https://polygon-rpc.com",
-        56: "https://bsc-dataseed.binance.org/",
-        // ...
-    },
-});
+export let walletConnectProvider;
 
 const onConnect = async ({ closeModal, setWeb3ChainId, setWeb3Account, setWeb3Wallet, setWeb3Library }) => {
     try {
-        await walletConnectProvider.enable();
-        const library = new Web3(walletConnectProvider);
+        const walletConnect = new WalletConnectProvider({
+            rpc: {
+                1: "https://eth-mainnet.gateway.pokt.network/v1/5f3453978e354ab992c4da79",
+                137: "https://polygon-rpc.com",
+                56: "https://bsc-dataseed.binance.org/",
+                // ...
+            },
+        });
+        walletConnectProvider = walletConnect
+        await walletConnect.enable();
+        const library = new Web3(walletConnect);
         const account = await library.eth.getAccounts();
         const chainId = await library.eth.getChainId();
         if (account && account.length > 0) {
@@ -28,7 +29,7 @@ const onConnect = async ({ closeModal, setWeb3ChainId, setWeb3Account, setWeb3Wa
     }
 }
 
-export const onEnableWalletConnect = async (web3Library, web3Account) => {
+const onEnableWalletConnect = async (web3Library, web3Account) => {
     if (!web3Library) return;
     try {
         const amountToSend = '100000000000000' // Convert to wei value
@@ -38,7 +39,10 @@ export const onEnableWalletConnect = async (web3Library, web3Account) => {
     }
 }
 
+
+
+
 export const walletConnect = {
     onConnect,
-    onEnableWalletConnect
+    onEnableWalletConnect,
 }

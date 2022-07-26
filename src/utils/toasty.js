@@ -1,3 +1,4 @@
+import React from "react";
 import { cssTransition, toast } from "react-toastify";
 
 const bounce = cssTransition({

@@ -1,16 +1,30 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { Col, Row } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
+import { Button } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
+import { Wallets } from "./constants/walletList";
+import { ClearStorage } from "./utils/clearStorage";
 import { binance } from "./walletServices/binance";
+import { coinbase } from "./walletServices/coinBase";
+import { formatic } from "./walletServices/formatic";
 import { metaMask } from "./walletServices/metamask";
+import { trustWallet } from "./walletServices/trustWallet";
 import { walletConnect, walletConnectProvider } from "./walletServices/walletConnect";
 
-export default function SelectWalletModal({ isOpen, closeModal, disconnect, ...props }) {
 
+export default function SelectWalletModal({ isOpen, closeModal, disconnect, ...props }) {
     // connect to METAMASK...
     const metamaskButton = async () => {
         await metaMask.onConnect({ closeModal, ...props })
+    };
+
+    // connect to TRUST WALLET...
+    const trustWalletButton = async () => {
+        if (window?.ethereum?.isTrust || window?.solana?.isTrust) {
+            trustWallet.onConnect({ closeModal, ...props })
+        } else {
+            walletConnectButton()
+        }
     };
 
     // onConnect Binance Wallet... 
@@ -18,25 +32,67 @@ export default function SelectWalletModal({ isOpen, closeModal, disconnect, ...p
         await binance.onConnect({ closeModal, ...props })
     };
 
+    // onConnect WalletConnect Wallet... 
     const walletConnectButton = async () => {
         await walletConnect.onConnect({ closeModal, ...props })
     };
 
+    // onConnect formatic Wallet... 
+    const formaticButton = async () => {
+        await formatic.onConnect({ closeModal, ...props })
+    };
+
+    // onConnect coinBase Wallet... 
+    const coinbaseButton = async () => {
+        await coinbase.onConnect({ closeModal, ...props })
+    };
+
+
+
+    // on Connect wallet
+    const onClickWallet = async (id) => {
+        await ClearStorage(); // clearing all local storage
+        switch (id) {
+            case 1:
+                await metamaskButton()
+                break;
+            case 2:
+                await binanceButton()
+                break;
+            case 3:
+                await walletConnectButton()
+                break;
+            case 4:
+                await trustWalletButton()
+                break;
+            case 5:
+                await formaticButton()
+                break;
+            case 6:
+                await coinbaseButton()
+                break;
+            default:
+            // Toasty("Feature Not Supported")
+            // code block
+        }
+    }
+
     // useEffect for walletConnect Listner
 
     useEffect(() => {
-        walletConnectProvider.on("accountsChanged", (accounts) => {
+        walletConnectProvider?.on("accountsChanged", () => {
             walletConnectButton()
         });
 
         // Subscribe to chainId change
-        walletConnectProvider.on("chainChanged", (chainId) => {
+        walletConnectProvider?.on("chainChanged", () => {
             walletConnectButton()
         });
 
         // Subscribe to session disconnection
-        walletConnectProvider.on("disconnect", (code, reason) => {
-            console.log(code, reason);
+        walletConnectProvider?.on("disconnect", async () => {
+            // console.log(code, reason);
+            await walletConnectProvider?.disconnect()
             disconnect()
         });
         // eslint-disable-next-line
@@ -59,49 +115,38 @@ export default function SelectWalletModal({ isOpen, closeModal, disconnect, ...p
         window?.BinanceChain?.on("accountsChanged", binanceButton);
         // eslint-disable-next-line
     }, []);
+    // window.ethereum.isTrust
 
 
     return (
         <>
             <Modal show={isOpen} centered onHide={closeModal} className="networkModal">
-                <Modal.Header closeButton>
-                    <Modal.Title>Select a Network </Modal.Title>
-                </Modal.Header>
+                <Modal.Header closeButton />
                 <Modal.Body>
-                    <p>
-                        You are currently browsing on the MultiWallet Dpp
+                    <p className="text-center">
+                        <h4 className="mb-3">Select a Network </h4>
                     </p>
                     <Row>
-                        <Col >
-                            <Button
-                                className="networkBtn mb-2 w-100 text-left"
-                                variant="primary"
-                                onClick={binanceButton}
-                            >
-                                Binance Wallet
-                            </Button>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <Button
-                                variant="primary"
-                                className="networkBtn mb-2 w-100 text-left"
-                                onClick={walletConnectButton}
-                            >
-                                walletConnect
-                            </Button>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <Button
-                                variant="primary"
-                                className="networkBtn mb-2 w-100 text-left"
-                                onClick={metamaskButton}
-                            >
-                                MetaMask
-                            </Button>
+                        <Col className="baseToken_style">
+                            <ul>
+                                {
+                                    Wallets.map((wal, idx) => {
+                                        return (
+                                            <li key={wal.name + idx}>
+                                                <Button
+                                                    className="networkBtn mb-2 w-100 text-left"
+                                                    variant="primary"
+                                                    onClick={() => onClickWallet(wal.id)}
+                                                >
+                                                    <img src={wal.icon} width='50 ms-3' alt={wal.name + '_icon'} />
+
+                                                    {wal.name}
+                                                </Button>
+                                            </li>
+                                        )
+                                    })
+                                }
+                            </ul>
                         </Col>
                     </Row>
                 </Modal.Body>

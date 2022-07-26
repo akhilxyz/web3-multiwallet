@@ -24,7 +24,7 @@ const onConnect = async ({ closeModal, setWeb3ChainId, setWeb3Account, setWeb3Wa
     }
 }
 
-export const onEnableBinance = async (web3Library, web3Account) => {
+const onEnableBinance = async (web3Library) => {
     if (!web3Library) return;
     try {
         const amountToSend = '100000000000000' // Convert to wei value
@@ -36,7 +36,7 @@ export const onEnableBinance = async (web3Library, web3Account) => {
     }
 }
 
-export const onChangeNetwork = async (chainId) => {
+const onChangeNetwork = async (chainId) => {
     let networkD = networkParams[Number(chainId)];
     const { BinanceChain } = window
     if (BinanceChain && networkD && networkD.bscNetworkId) {

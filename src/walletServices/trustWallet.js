@@ -1,18 +1,17 @@
+import Web3 from "web3";
 import { metaMaskError } from "../utils/errorhandler";
 import { networkParams } from "../utils/networks";
 import Toasty from "../utils/toasty";
-import Web3 from "web3";
 
 
 const onConnect = async ({ closeModal, setWeb3ChainId, setWeb3Account, setWeb3Wallet, setWeb3Library }) => {
-    if (typeof window?.ethereum !== "undefined") {
+    if (window.ethereum.isTrust || window.solana.isTrust) {
         try {
-            const provider = window.ethereum.providers.find((provider) => provider.isMetaMask);
-            const library = new Web3(provider);
+            const library = new Web3(window.ethereum.isTrust || window.solana.isTrust);
             const account = await library.eth.getAccounts();
             const chainId = await library.eth.getChainId();
             if (account && account.length > 0) {
-                setWeb3Wallet("MetaMask");
+                setWeb3Wallet("TrustWallet");
                 setWeb3Account(account[0]);
                 setWeb3Library(library);
                 setWeb3ChainId(chainId);
@@ -26,7 +25,7 @@ const onConnect = async ({ closeModal, setWeb3ChainId, setWeb3Account, setWeb3Wa
     }
 }
 
-const onEnableEthereum = async (web3Library, web3Account) => {
+const onEnableTrust = async (web3Library, web3Account) => {
     if (!web3Library) return;
     try {
         const amountToSend = '100000000000000' // Convert to wei value
@@ -40,10 +39,9 @@ const onEnableEthereum = async (web3Library, web3Account) => {
 
 const onChangeNetwork = async (chainId) => {
     let networkD = networkParams[Number(chainId)];
-    const ethereum = window.ethereum.providers.find((provider) => provider.isMetaMask);
-    if (ethereum && networkD) {
+    if (window?.ethereum && networkD) {
         try {
-            return await ethereum.request({
+            return await window?.ethereum.request({
                 method: "wallet_switchEthereumChain",
                 params: [{ chainId: networkD.chainId }], // chainId must be in hexadecimal numbers
             })
@@ -52,7 +50,7 @@ const onChangeNetwork = async (chainId) => {
             // if it is not, then install it into the user MetaMask
             if (error.code === 4902) {
                 try {
-                    return await ethereum
+                    return await window?.ethereum
                         .request({
                             method: "wallet_addEthereumChain",
                             params: [
@@ -76,8 +74,8 @@ const onChangeNetwork = async (chainId) => {
 };
 
 
-export const metaMask = {
+export const trustWallet = {
     onConnect,
-    onEnableEthereum,
+    onEnableTrust,
     onChangeNetwork
 }

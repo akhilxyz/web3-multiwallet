@@ -1,14 +1,14 @@
-// import logo from './logo.svg';
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Card } from 'react-bootstrap';
 import SelectWalletModal from './Modal';
 import { metaMask } from './walletServices/metamask';
-import 'react-toastify/dist/ReactToastify.css';
 import Toasty from './utils/toasty';
 import { binance } from './walletServices/binance';
 import { walletConnect } from './walletServices/walletConnect';
+import { formatic } from './walletServices/formatic';
+import { coinbase } from './walletServices/coinBase';
+import 'react-toastify/dist/ReactToastify.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [show, setShow] = useState(false)
@@ -43,7 +43,6 @@ function App() {
   };
 
   const enableWallet = async () => {
-
     if (!web3Library) return Toasty("No Wallet Connected");
     switch (web3Wallet) {
       case 'MetaMask':
@@ -55,6 +54,17 @@ function App() {
       case 'WalletConnect':
         await walletConnect.onEnableWalletConnect(web3Library, web3Account)
         break;
+      case 'TrustWallet':
+        await walletConnect.onEnableWalletConnect(web3Library, web3Account)
+        break;
+      case 'Formatic':
+        await formatic.onEnableFormatic(web3Library, web3Account)
+        break;
+      case 'CoinBase':
+        await coinbase.onEnableCoinBase(web3Library, web3Account)
+        break;
+      // onEnableCoinBase
+      // onEnableFormaticConnect
       default:
       // code block
     }
@@ -70,6 +80,20 @@ function App() {
         await binance.onChangeNetwork(chain)
         // code block
         break;
+      case 'Formatic': // supports only Ethereum networks
+        if (chain === '56' || chain === '1') {
+          await formatic.onChangeNetwork(chain, setWeb3ChainId, setWeb3Account, setWeb3Wallet, setWeb3Library)
+        } else {
+          Toasty("Chian Not Supported")
+        }
+        break;
+      case 'CoinBase':
+        await coinbase.onChangeNetwork(chain)
+        // code block
+        break;
+      // more props because we dont've window listner
+      // code block
+      // break;
       default:
         Toasty("Feature Not Supported")
       // code block
@@ -106,7 +130,7 @@ function App() {
           <h5>Account: {web3Account}</h5>
           <h5>Wallet: {web3Wallet}</h5>
           <h5>ChainId: {web3ChainId}</h5>
-          <Button variant='success' onClick={enableWallet}>
+          <Button variant='success' disabled={web3Account ? false : true} onClick={enableWallet}>
             Send Transaction
           </Button>
         </Card.Body>
