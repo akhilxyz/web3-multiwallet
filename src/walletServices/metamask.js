@@ -13,10 +13,14 @@ const onConnect = async ({
 }) => {
   if (typeof window?.ethereum !== "undefined") {
     try {
-      const provider = window.ethereum.providers.find(
-        (provider) => provider.isMetaMask
-      );
-      const library = new Web3(provider);
+      let provider = window.ethereum;
+      // edge case if MM and CBW are both installed
+      if (window.ethereum.providers?.length) {
+        window.ethereum.providers.forEach(async (p) => {
+          if (p.isMetaMask) provider = p;
+        });
+      }
+      const library = new Web3(provider || window.ethereum);
       const account = await library.eth.getAccounts();
       const chainId = await library.eth.getChainId();
       if (account && account.length > 0) {
@@ -54,12 +58,16 @@ const onEnableEthereum = async (web3Library, web3Account) => {
 // on Change Network in MetaMask wallet...
 const onChangeNetwork = async (chainId) => {
   let networkD = networkParams[Number(chainId)];
-  const ethereum = window.ethereum.providers.find(
-    (provider) => provider.isMetaMask
-  );
-  if (ethereum && networkD) {
+  let provider = window.ethereum;
+  // edge case if MM and CBW are both installed
+  if (window.ethereum.providers?.length) {
+    window.ethereum.providers.forEach(async (p) => {
+      if (p.isMetaMask) provider = p;
+    });
+  }
+  if (provider && networkD) {
     try {
-      return await ethereum.request({
+      return await provider.request({
         method: "wallet_switchEthereumChain",
         params: [{ chainId: networkD.chainId }], // chainId must be in hexadecimal numbers
       });
@@ -68,7 +76,7 @@ const onChangeNetwork = async (chainId) => {
       // if it is not, then install it into the user MetaMask
       if (error.code === 4902) {
         try {
-          return await ethereum.request({
+          return await provider.request({
             method: "wallet_addEthereumChain",
             params: [
               {
@@ -77,7 +85,7 @@ const onChangeNetwork = async (chainId) => {
             ],
           });
         } catch (error) {
-          console.log("addError", error);
+          console.log("error", error);
         }
       }
       if (error && error.message) {

@@ -71,6 +71,7 @@ const onChangeNetwork = async (
         setWeb3Library(library);
         setWeb3ChainId(chainId);
       }
+      return true;
     }
   } catch (error) {
     console.log("error", error);

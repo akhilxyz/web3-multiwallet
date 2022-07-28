@@ -7,10 +7,10 @@ import { binance } from "./walletServices/binance";
 import { walletConnect } from "./walletServices/walletConnect";
 import { formatic } from "./walletServices/formatic";
 import { coinbase } from "./walletServices/coinBase";
-import "react-toastify/dist/ReactToastify.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { ClearStorage } from "./utils/clearStorage";
 import { walletAddress } from "./utils/utils";
+import "react-toastify/dist/ReactToastify.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   const [show, setShow] = useState(false);
@@ -19,11 +19,13 @@ function App() {
   const [web3Account, setWeb3Account] = useState();
   const [web3Wallet, setWeb3Wallet] = useState();
 
+  // onclose Modal...
   const closeModal = () => setShow(false);
 
-  const handleNetwork = (e) => {
+  // onSwitch Network...
+  const handleNetwork = async (e) => {
     const id = e.target.value;
-    switchNetwork(id);
+    await switchNetwork(id);
   };
 
   const refreshState = () => {
@@ -31,7 +33,6 @@ function App() {
     setWeb3Account("");
     setWeb3ChainId("");
     setWeb3Wallet("");
-    // setVerified(undefined);
   };
 
   useEffect(() => {
@@ -40,8 +41,8 @@ function App() {
     }
   }, [web3Wallet]);
 
-  const disconnect = () => {
-    ClearStorage();
+  const disconnect = async () => {
+    await ClearStorage(); // clearing all local storage
     refreshState();
   };
 
@@ -66,8 +67,6 @@ function App() {
       case "CoinBase":
         await coinbase.onEnableCoinBase(web3Library, web3Account);
         break;
-      // onEnableCoinBase
-      // onEnableFormaticConnect
       default:
       // code block
     }
@@ -109,10 +108,12 @@ function App() {
     }
   };
 
+
   return (
     <div className="App mt-4 ">
       <div className="d-flex justify-content-center">
         <SelectWalletModal
+          web3Wallet={web3Wallet}
           setWeb3Account={setWeb3Account}
           setWeb3ChainId={setWeb3ChainId}
           setWeb3Wallet={setWeb3Wallet}
@@ -125,9 +126,8 @@ function App() {
           {!web3Wallet ? (
             <Button onClick={() => setShow(true)}>Connect Wallet</Button>
           ) : (
-            <Button onClick={disconnect}>Disconnect</Button>
+            <Button variant="danger" onClick={disconnect}>Disconnect</Button>
           )}
-
           <select
             placeholder="Select network"
             className="ms-1"
@@ -154,7 +154,7 @@ function App() {
           <span className="text-muted">{web3ChainId || "Not Connected"}</span>
         </h5>
         <Button
-          variant="success"
+          variant={"success"}
           disabled={web3Account ? false : true}
           onClick={enableWallet}
         >

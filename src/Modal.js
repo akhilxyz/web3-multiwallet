@@ -3,13 +3,13 @@ import { Col, Row } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import { Wallets } from "./constants/walletList";
-import { ClearStorage } from "./utils/clearStorage";
+import { BinanceListner, coinBaseListner, MetaMaskListner, WalletConnectListner } from "./utils/listners";
 import { binance } from "./walletServices/binance";
 import { coinbase } from "./walletServices/coinBase";
 import { formatic } from "./walletServices/formatic";
 import { metaMask } from "./walletServices/metamask";
 import { trustWallet } from "./walletServices/trustWallet";
-import { walletConnect, walletConnectProvider } from "./walletServices/walletConnect";
+import { walletConnect } from "./walletServices/walletConnect";
 
 export default function SelectWalletModal({
   isOpen,
@@ -53,7 +53,6 @@ export default function SelectWalletModal({
 
   // on Connect wallet
   const onClickWallet = async (id) => {
-    await ClearStorage(); // clearing all local storage
     switch (id) {
       case 1:
         await metamaskButton();
@@ -80,44 +79,17 @@ export default function SelectWalletModal({
   };
 
   // useEffect for walletConnect Listner
-
   useEffect(() => {
-    walletConnectProvider?.on("accountsChanged", () => {
-      walletConnectButton();
-    });
-
-    // Subscribe to chainId change
-    walletConnectProvider?.on("chainChanged", () => {
-      walletConnectButton();
-    });
-
-    // Subscribe to session disconnection
-    walletConnectProvider?.on("disconnect", async () => {
-      // console.log(code, reason);
-      await walletConnectProvider?.disconnect();
-      disconnect();
-    });
-    // eslint-disable-next-line
-  }, []);
-
-  // useEffect for metmask wallet Listner
-  useEffect(() => {
-    window?.ethereum?.on("chainChanged", metamaskButton);
-    window?.ethereum?.on("accountsChanged", metamaskButton);
-    return () => {
-      window?.ethereum?.removeListener("chainChanged", metamaskButton);
-      window?.ethereum?.removeListener("accountsChanged", metamaskButton);
-    };
-    // eslint-disable-next-line
-  }, []);
-
-  // useEffect for BinanceChain wallet Listner
-  useEffect(() => {
-    window?.BinanceChain?.on("chainChanged", binanceButton);
-    window?.BinanceChain?.on("accountsChanged", binanceButton);
-    // eslint-disable-next-line
-  }, []);
-  // window.ethereum.isTrust
+    if (props.web3Wallet === 'MetaMask') {
+      MetaMaskListner(metamaskButton, disconnect);
+    } else if (props.web3Wallet === 'Binance') {
+      BinanceListner(binanceButton, disconnect);
+    } else if (props.web3Wallet === 'WalletConnect') {
+      WalletConnectListner(walletConnectButton, disconnect);
+    } else if (props.web3Wallet === 'CoinBase') {
+      coinBaseListner(coinbaseButton, disconnect);
+    }
+  }, [props?.web3Wallet]);
 
   return (
     <>
@@ -129,9 +101,7 @@ export default function SelectWalletModal({
       >
         <Modal.Header closeButton />
         <Modal.Body>
-          <p className="text-center">
-            <h4 className="mb-3">Select a Network </h4>
-          </p>
+          <h4 className="mb-3 text-center">Select a Network </h4>
           <Row>
             <Col className="baseToken_style">
               <ul>

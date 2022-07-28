@@ -53,14 +53,13 @@ const onChangeNetwork = async (chainId) => {
   if (networkD) {
     try {
       // attempt to switch to Harmony One network
-      const result = await ethereum.send("wallet_switchEthereumChain", [
+      return await ethereum.send("wallet_switchEthereumChain", [
         { chainId: networkD.chainId },
       ]);
-      console.log("result", result);
     } catch (switchError) {
       // 4902 indicates that the client does not recognize the Harmony One network
       if (switchError.code === 4902) {
-        await ethereum.request({
+        return await ethereum.request({
           method: "wallet_addEthereumChain",
           params: [
             {
