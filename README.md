@@ -18,6 +18,9 @@ use commands
 <sub> Format Code</sub>
 * **format:fix**
 
+<sub> Finf and fix Problem</sub>
+* **lint , lint-fix**
+
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
 The page will reload when you make changes.\
