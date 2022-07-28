@@ -8,8 +8,18 @@ In the project directory, you can run:
 
 Runs the app in the development mode.\
 use commands 
-* npm i 
-* npm start
+
+<sub> Install dependencies</sub>
+* **npm i** 
+
+<sub> Run Project</sub>
+* **npm start**
+
+<sub> Format Code</sub>
+* **format:fix**
+
+<sub> Finf and fix Problem</sub>
+* **lint , lint-fix**
 
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
