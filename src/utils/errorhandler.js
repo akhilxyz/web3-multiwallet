@@ -15,9 +15,9 @@ export const web3ErrorHandle = async (err) => {
 };
 
 export const metaMaskError = (error) => {
-  const errorCode = error && error.code ? error.code : 0
+  const errorCode = error && error.code ? error.code : 0;
   if (errorCode === 0) {
-    return error
+    return error;
   } else if (errorCode === -32700) {
     return "Invalid JSON was received by the server. An error occurred on the server while parsing the JSON text.";
   } else if (errorCode === -32600) {

@@ -1,14 +1,24 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+:root {
+  background-image: linear-gradient(
+    to right,
+    rgba(255, 255, 0, 0.279),
+    rgba(0, 255, 255, 0.542)
+  );
+  --gray: #34495e;
+  --darkgray: #2c3e50;
+}
+
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
@@ -18,7 +28,8 @@ code {
 .networkModal .modal-content .modal-header {
   border-bottom: 0;
 }
-.networkModal .modal-content .modal-title.h4, .networkModal .modal-content p {
+.networkModal .modal-content .modal-title.h4,
+.networkModal .modal-content p {
   color: #fff;
 }
 .networkModal .btn-close {
@@ -79,7 +90,7 @@ code {
 @media (max-width: 767px) {
   .baseToken_style {
     padding-top: 0;
- }
+  }
 }
 .baseToken_style ul {
   padding: 0 25px;
@@ -91,7 +102,7 @@ code {
   .baseToken_style ul {
     padding: 0;
     margin-bottom: 0;
- }
+  }
 }
 .baseToken_style ul li {
   display: block;
@@ -124,7 +135,7 @@ code {
   .baseToken_style ul li button.btn {
     padding: 12px 20px;
     font-size: 13px;
- }
+  }
 }
 .baseToken_style ul li button.btn:focus {
   box-shadow: none;
@@ -140,9 +151,129 @@ code {
     right: 6px;
     top: 4px;
     height: 34px;
- }
+  }
 }
 
 .modal-dialog {
   max-width: 620px;
+}
+
+select {
+  /* Reset Select */
+  appearance: none;
+  outline: 0;
+  border: 0;
+  box-shadow: none;
+  /* Personalize */
+  flex: 1;
+  padding: 0 1em;
+  color: #fff;
+  background-color: var(--darkgray);
+  background-image: none;
+  cursor: pointer;
+}
+/* Remove IE arrow */
+select::-ms-expand {
+  display: none;
+}
+/* Custom Select wrapper */
+.select {
+  /* position: relative; */
+  display: flex;
+  width: 20em;
+  height: 3em;
+  border-radius: 0.25em;
+  overflow: hidden;
+}
+/* Arrow */
+.select::after {
+  content: "\25BC";
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 1em;
+  background-color: #34495e;
+  transition: 0.25s all ease;
+  pointer-events: none;
+}
+/* Transition */
+.select:hover::after {
+  color: #12bff3;
+}
+
+/* Other styles*/
+body {
+  color: #fff;
+  background: var(--background-gradient);
+}
+h1 {
+  margin: 0 0 0.25em;
+}
+a {
+  font-weight: bold;
+  color: var(--gray);
+  text-decoration: none;
+  padding: 0.25em;
+  border-radius: 0.25em;
+  background: white;
+}
+
+select {
+  /* Reset Select */
+  appearance: none;
+  outline: 0;
+  border: 0;
+  box-shadow: none;
+  /* Personalize */
+  flex: 1;
+  padding: 0 1em;
+  color: #fff;
+  background-color: var(--darkgray);
+  background-image: none;
+  cursor: pointer;
+}
+/* Remove IE arrow */
+select::-ms-expand {
+  display: none;
+}
+/* Custom Select wrapper */
+.select {
+  position: relative;
+  display: flex;
+  width: 20em;
+  height: 3em;
+  border-radius: 0.25em;
+  overflow: hidden;
+}
+/* Arrow */
+.select::after {
+  content: "\25BC";
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 1em;
+  background-color: #34495e;
+  transition: 0.25s all ease;
+  pointer-events: none;
+}
+/* Transition */
+.select:hover::after {
+  color: #12e8f3;
+}
+
+/* Other styles*/
+body {
+  color: #fff;
+  background: var(--background-gradient);
+}
+h1 {
+  margin: 0 0 0.25em;
+}
+a {
+  font-weight: bold;
+  color: var(--gray);
+  text-decoration: none;
+  padding: 0.25em;
+  border-radius: 0.25em;
+  background: white;
 }
