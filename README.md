@@ -1,5 +1,8 @@
 # Getting Started with Multiwallet DApp
 
+
+<img src="https://img.freepik.com/premium-vector/cryptocurrency-wallet-app-mobile-blockchain-technology-bitcoin-money-market-altcoins-finance-exchange-with-credit-card-flat-vector-illustration_2175-1430.jpg?w=1060" width="400"/>
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
