@@ -22,6 +22,7 @@ const onConnect = async ({
       }
       await provider.enable()
       const library = new Web3(provider || window.ethereum);
+      await provider.enable();
       const account = await library.eth.getAccounts();
       const chainId = await library.eth.getChainId();
       if (account && account.length > 0) {
