@@ -13,6 +13,7 @@ const onConnect = async ({
   const { BinanceChain } = window;
   if (BinanceChain) {
     try {
+      await BinanceChain.enable()
       const library = new Web3(BinanceChain);
       const account = await library.eth.getAccounts();
       const chainId = await library.eth.getChainId();

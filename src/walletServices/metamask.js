@@ -20,6 +20,7 @@ const onConnect = async ({
           if (p.isMetaMask) provider = p;
         });
       }
+      await provider.enable()
       const library = new Web3(provider || window.ethereum);
       const account = await library.eth.getAccounts();
       const chainId = await library.eth.getChainId();
@@ -65,6 +66,7 @@ const onChangeNetwork = async (chainId) => {
       if (p.isMetaMask) provider = p;
     });
   }
+  provider.enable()
   if (provider && networkD) {
     try {
       return await provider.request({

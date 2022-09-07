@@ -10,11 +10,12 @@ const onConnect = async ({
   setWeb3Wallet,
   setWeb3Library,
 }) => {
-  if (window.ethereum.isTrust || window.solana.isTrust) {
+  if (window.trustwallet.ethereum.isTrust || window.trustwallet.solana.isTrust
+  ) {
     try {
-      const library = new Web3(
-        window.ethereum.isTrust || window.solana.isTrust
-      );
+      const provider =  window.trustwallet.ethereum || window.trustwallet.solana;
+      const library = new Web3(provider);
+      await provider.enable()
       const account = await library.eth.getAccounts();
       const chainId = await library.eth.getChainId();
       if (account && account.length > 0) {
@@ -25,6 +26,7 @@ const onConnect = async ({
         closeModal();
       }
     } catch (error) {
+      window.alert(error);
       console.log("error", "Something went wrong !");
     }
   } else {

@@ -12,6 +12,7 @@ import { walletAddress } from "./utils/utils";
 import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
+
 function App() {
   const [show, setShow] = useState(false);
   const [web3Library, setWeb3Library] = useState();
@@ -35,6 +36,8 @@ function App() {
     setWeb3Wallet("");
   };
 
+
+
   useEffect(() => {
     if (web3Wallet) {
       Toasty(`You are connected to ${web3Wallet}`);
@@ -42,6 +45,10 @@ function App() {
   }, [web3Wallet]);
 
   const disconnect = async () => {
+    // let arr = [1, 2, 4, 4, 4, 2, 1, 6]
+    // console.log(removeArr)
+    // let r = removeArrayDuplicates(arr)
+    // console.log("rrrrrrr", r)
     await ClearStorage(); // clearing all local storage
     refreshState();
   };
@@ -108,7 +115,6 @@ function App() {
     }
   };
 
-
   return (
     <div className="App mt-4 ">
       <div className="d-flex justify-content-center">
@@ -126,7 +132,9 @@ function App() {
           {!web3Wallet ? (
             <Button onClick={() => setShow(true)}>Connect Wallet</Button>
           ) : (
-            <Button variant="danger" onClick={disconnect}>Disconnect</Button>
+            <Button variant="danger" onClick={disconnect}>
+              Disconnect
+            </Button>
           )}
           <select
             placeholder="Select network"
@@ -161,8 +169,6 @@ function App() {
           Send Transaction
         </Button>
       </div>
-      {/* </Card.Body> */}
-      {/* </Card> */}
     </div>
   );
 }

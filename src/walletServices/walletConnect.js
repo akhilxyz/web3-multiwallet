@@ -9,6 +9,7 @@ const onConnect = async ({
   setWeb3Account,
   setWeb3Wallet,
   setWeb3Library,
+  isTrust,
 }) => {
   try {
     const walletConnect = new WalletConnectProvider({
@@ -25,7 +26,7 @@ const onConnect = async ({
     const account = await library.eth.getAccounts();
     const chainId = await library.eth.getChainId();
     if (account && account.length > 0) {
-      setWeb3Wallet("WalletConnect");
+      setWeb3Wallet(isTrust ? isTrust : "WalletConnect");
       setWeb3Account(account[0]);
       setWeb3Library(library);
       setWeb3ChainId(chainId);

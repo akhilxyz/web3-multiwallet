@@ -3,7 +3,13 @@ import { Col, Row } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import { Wallets } from "./constants/walletList";
-import { BinanceListner, coinBaseListner, MetaMaskListner, WalletConnectListner } from "./utils/listners";
+import {
+  BinanceListner,
+  coinBaseListner,
+  MetaMaskListner,
+  TrustWalletListner,
+  WalletConnectListner,
+} from "./utils/listners";
 import { binance } from "./walletServices/binance";
 import { coinbase } from "./walletServices/coinBase";
 import { formatic } from "./walletServices/formatic";
@@ -24,10 +30,10 @@ export default function SelectWalletModal({
 
   // connect to TRUST WALLET...
   const trustWalletButton = async () => {
-    if (window?.ethereum?.isTrust || window?.solana?.isTrust) {
+    if (window?.ethereum?.isTrust || window?.trustwallet?.solana?.isTrust) {
       trustWallet.onConnect({ closeModal, ...props });
     } else {
-      walletConnectButton();
+      walletConnectButton("TrustWallet");
     }
   };
 
@@ -37,8 +43,8 @@ export default function SelectWalletModal({
   };
 
   // onConnect WalletConnect Wallet...
-  const walletConnectButton = async () => {
-    await walletConnect.onConnect({ closeModal, ...props });
+  const walletConnectButton = async (isTrust) => {
+    await walletConnect.onConnect({ closeModal, isTrust, ...props });
   };
 
   // onConnect formatic Wallet...
@@ -80,14 +86,18 @@ export default function SelectWalletModal({
 
   // useEffect for walletConnect Listner
   useEffect(() => {
-    if (props.web3Wallet === 'MetaMask') {
+    if (props.web3Wallet === "MetaMask") {
       MetaMaskListner(metamaskButton, disconnect);
-    } else if (props.web3Wallet === 'Binance') {
+    } else if (props.web3Wallet === "Binance") {
       BinanceListner(binanceButton, disconnect);
-    } else if (props.web3Wallet === 'WalletConnect') {
+    } else if (props.web3Wallet === "WalletConnect") {
       WalletConnectListner(walletConnectButton, disconnect);
-    } else if (props.web3Wallet === 'CoinBase') {
+    } else if (props.web3Wallet === "CoinBase") {
       coinBaseListner(coinbaseButton, disconnect);
+    } else if (props.web3Wallet === "TrustWallet") {
+      window?.ethereum?.isTrust
+        ? TrustWalletListner(trustWalletButton, disconnect, true)
+        : TrustWalletListner(trustWalletButton, disconnect);
     }
   }, [props?.web3Wallet]);
 

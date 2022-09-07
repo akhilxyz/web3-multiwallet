@@ -3,8 +3,7 @@ import Web3 from "web3";
 import { networkParams } from "../utils/networks";
 const APP_NAME = "MultiWallet";
 const APP_LOGO_URL = "";
-const DEFAULT_ETH_JSONRPC_URL =
-  "https://fantom-mainnet.gateway.pokt.network/v1/lb/62759259ea1b320039c9e7ac";
+const DEFAULT_ETH_JSONRPC_URL = "https://fantom-mainnet.gateway.pokt.network/v1/lb/62759259ea1b320039c9e7ac";
 const DEFAULT_CHAIN_ID = 1;
 
 // Initialize Coinbase Wallet SDK
