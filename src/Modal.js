@@ -87,6 +87,7 @@ export default function SelectWalletModal({
 
   // useEffect for walletConnect Listner
   useEffect(() => {
+    detectPriovider()
     if (props.web3Wallet === "MetaMask") {
       MetaMaskListner(metamaskButton, disconnect);
     } else if (props.web3Wallet === "Binance") {
@@ -101,11 +102,6 @@ export default function SelectWalletModal({
         : TrustWalletListner(trustWalletButton, disconnect);
     }
   }, [props?.web3Wallet]);
-
-  useEffect(() => {
-    detectPriovider()
-  }, [props?.web3Wall]);
-
 
   const detectPriovider = async () => {
     const provider = await detectProvider()

@@ -9,10 +9,9 @@ import { formatic } from "./walletServices/formatic";
 import { coinbase } from "./walletServices/coinBase";
 import { ClearStorage } from "./utils/clearStorage";
 import { walletAddress } from "./utils/utils";
+import { addPrivider } from "./utils/detectProvider";
 import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { addPrivider } from "./utils/detectProvider";
-
 
 function App() {
   const [show, setShow] = useState(false);
