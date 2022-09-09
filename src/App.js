@@ -11,6 +11,7 @@ import { ClearStorage } from "./utils/clearStorage";
 import { walletAddress } from "./utils/utils";
 import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { addPrivider } from "./utils/detectProvider";
 
 
 function App() {
@@ -41,16 +42,15 @@ function App() {
   useEffect(() => {
     if (web3Wallet) {
       Toasty(`You are connected to ${web3Wallet}`);
+      addPrivider(web3Wallet)
     }
   }, [web3Wallet]);
 
   const disconnect = async () => {
-    // let arr = [1, 2, 4, 4, 4, 2, 1, 6]
-    // console.log(removeArr)
-    // let r = removeArrayDuplicates(arr)
-    // console.log("rrrrrrr", r)
     await ClearStorage(); // clearing all local storage
     refreshState();
+    Toasty(`You are disconnected`);
+
   };
 
   const enableWallet = async () => {

@@ -3,6 +3,7 @@ import { Col, Row } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import { Wallets } from "./constants/walletList";
+import { detectProvider } from "./utils/detectProvider";
 import {
   BinanceListner,
   coinBaseListner,
@@ -100,6 +101,28 @@ export default function SelectWalletModal({
         : TrustWalletListner(trustWalletButton, disconnect);
     }
   }, [props?.web3Wallet]);
+
+  useEffect(() => {
+    detectPriovider()
+  }, [props?.web3Wall]);
+
+
+  const detectPriovider = async () => {
+    const provider = await detectProvider()
+    if (provider === "MetaMask") {
+      metamaskButton();
+    } else if (provider === "Binance") {
+      binanceButton();
+    } else if (provider === "WalletConnect") {
+      walletConnectButton();
+    } else if (provider === "CoinBase") {
+      coinbaseButton();
+    } else if (provider === "TrustWallet") {
+      trustWalletButton()
+    } else if (provider === "Formatic") {
+      formaticButton()
+    }
+  }
 
   return (
     <>
