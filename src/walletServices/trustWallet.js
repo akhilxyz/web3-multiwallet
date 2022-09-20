@@ -30,7 +30,7 @@ const onConnect = async ({
       console.log("error", "Something went wrong !");
     }
   } else {
-    console.log("error", "Please Install metamask Extention");
+    console.log("error", "Please Install Trust Wallet Extention");
   }
 };
 

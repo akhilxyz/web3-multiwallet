@@ -31,7 +31,7 @@ export default function SelectWalletModal({
 
   // connect to TRUST WALLET...
   const trustWalletButton = async () => {
-    if (window?.ethereum?.isTrust || window?.trustwallet?.solana?.isTrust) {
+    if (window?.trustwallet?.ethereum?.isTrust || window?.trustwallet?.solana?.isTrust) {
       trustWallet.onConnect({ closeModal, ...props });
     } else {
       walletConnectButton("TrustWallet");
