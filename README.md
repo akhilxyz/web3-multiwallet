@@ -6,7 +6,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Demo Link
 
-Open [https://multiwallet-app.netlify.app](https://multiwallet-app.netlify.app) to view it in your browser.
+Open [https://multiwallet-v2.netlify.app/](https://multiwallet-v2.netlify.app/) to view it in your browser.
 
 ## Available Scripts
 
