@@ -3,6 +3,7 @@ import { Col, Row } from "react-bootstrap";
 import { Button } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import { Wallets } from "./constants/walletList";
+import { detectDevice } from "./utils/detectDevice";
 import { detectProvider } from "./utils/detectProvider";
 import {
   BinanceListner,
@@ -31,10 +32,21 @@ export default function SelectWalletModal({
 
   // connect to TRUST WALLET...
   const trustWalletButton = async () => {
-    if (window?.trustwallet?.ethereum?.isTrust || window?.trustwallet?.solana?.isTrust) {
-      trustWallet.onConnect({ closeModal, ...props });
+    // console.log("errrrrrr", window?.trustwallet)
+    const detectMobile = detectDevice()
+    if (detectMobile) {
+      if (window?.trustwallet?.isTrust || window.trustwallet.solana.isTrust) {
+        trustWallet.onConnect({ closeModal, ...props });
+      } else {
+        walletConnectButton("TrustWallet");
+      }
     } else {
-      walletConnectButton("TrustWallet");
+      if (window?.trustwallet?.isTrust) {
+        trustWallet.onConnectDesktop({ closeModal, ...props })
+        // trustWallet.onConnect({ closeModal, ...props });
+      } else {
+        // walletConnectButton("TrustWallet");
+      }
     }
   };
 

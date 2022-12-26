@@ -10,10 +10,41 @@ const onConnect = async ({
   setWeb3Wallet,
   setWeb3Library,
 }) => {
-  if (window.trustwallet.ethereum.isTrust || window.trustwallet.solana.isTrust
+  if (window.ethereum.isTrust || window.trustwallet.solana.isTrust
   ) {
     try {
-      const provider =  window.trustwallet.ethereum || window.trustwallet.solana;
+      const provider = window.trustwallet.ethereum || window.trustwallet.solana;
+      const library = new Web3(provider);
+      await provider.enable()
+      const account = await library.eth.getAccounts();
+      const chainId = await library.eth.getChainId();
+      if (account && account.length > 0) {
+        setWeb3Wallet("TrustWallet");
+        setWeb3Account(account[0]);
+        setWeb3Library(library);
+        setWeb3ChainId(chainId);
+        closeModal();
+      }
+    } catch (error) {
+      window.alert(error);
+      console.log("error", "Something went wrong !");
+    }
+  } else {
+    console.log("error", "Please Install Trust Wallet Extention");
+  }
+};
+
+const onConnectDesktop = async ({
+  closeModal,
+  setWeb3ChainId,
+  setWeb3Account,
+  setWeb3Wallet,
+  setWeb3Library,
+}) => {
+  if (window.trustwallet.isTrust
+  ) {
+    try {
+      const provider = window.trustwallet
       const library = new Web3(provider);
       await provider.enable()
       const account = await library.eth.getAccounts();
@@ -53,5 +84,6 @@ const onEnableTrust = async (web3Library, web3Account) => {
 
 export const trustWallet = {
   onConnect,
+  onConnectDesktop,
   onEnableTrust,
 };

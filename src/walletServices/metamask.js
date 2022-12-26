@@ -2,6 +2,7 @@ import { metaMaskError } from "../utils/errorhandler";
 import { networkParams } from "../utils/networks";
 import Toasty from "../utils/toasty";
 import Web3 from "web3";
+import detectEthereumProvider from "@metamask/detect-provider";
 
 // on Connect to MetaMask wallet...
 const onConnect = async ({
@@ -11,17 +12,15 @@ const onConnect = async ({
   setWeb3Wallet,
   setWeb3Library,
 }) => {
-  if (typeof window?.ethereum !== "undefined") {
+  const provider = await detectEthereumProvider();
+  if (provider.isMetaMask) {
     try {
-      let provider = window.ethereum;
-      // edge case if MM and CBW are both installed
-      if (window.ethereum.providers?.length) {
-        window.ethereum.providers.forEach(async (p) => {
-          if (p.isMetaMask) provider = p;
-        });
+      let newprovider = provider
+      if (provider?.providers?.length > 0) {
+        newprovider = provider.providers.find((provider) => provider.isMetaMask);
       }
-      await provider.enable()
-      const library = new Web3(provider || window.ethereum);
+      await newprovider.enable()
+      const library = new Web3(newprovider);
       const account = await library.eth.getAccounts();
       const chainId = await library.eth.getChainId();
       if (account && account.length > 0) {
@@ -32,7 +31,7 @@ const onConnect = async ({
         closeModal();
       }
     } catch (error) {
-      console.log("error", "Something went wrong !");
+      console.log("error", error);
     }
   } else {
     console.log("error", "Please Install metamask Extention");
