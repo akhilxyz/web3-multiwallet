@@ -13,7 +13,7 @@ const onConnect = async ({
   setWeb3Library,
 }) => {
   const provider = await detectEthereumProvider();
-  if (provider.isMetaMask) {
+  if (provider?.isMetaMask) {
     try {
       let newprovider = provider
       if (provider?.providers?.length > 0) {
