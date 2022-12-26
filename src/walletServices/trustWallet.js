@@ -41,7 +41,7 @@ const onConnectDesktop = async ({
   setWeb3Wallet,
   setWeb3Library,
 }) => {
-  if (window.trustwallet.isTrust
+  if (window?.trustwallet?.isTrust
   ) {
     try {
       const provider = window.trustwallet
@@ -61,6 +61,7 @@ const onConnectDesktop = async ({
       console.log("error", "Something went wrong !");
     }
   } else {
+    Toasty("Please Install Trust Wallet Extention");
     console.log("error", "Please Install Trust Wallet Extention");
   }
 };

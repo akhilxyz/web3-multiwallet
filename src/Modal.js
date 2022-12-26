@@ -41,12 +41,7 @@ export default function SelectWalletModal({
         walletConnectButton("TrustWallet");
       }
     } else {
-      if (window?.trustwallet?.isTrust) {
-        trustWallet.onConnectDesktop({ closeModal, ...props })
-        // trustWallet.onConnect({ closeModal, ...props });
-      } else {
-        // walletConnectButton("TrustWallet");
-      }
+      trustWallet.onConnectDesktop({ closeModal, ...props })
     }
   };
 

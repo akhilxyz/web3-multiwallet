@@ -34,7 +34,8 @@ const onConnect = async ({
       console.log("error", error);
     }
   } else {
-    console.log("error", "Please Install metamask Extention");
+    Toasty("Please Install metamask Extention");
+    // console.log("error", "Please Install metamask Extention");
   }
 };
 
